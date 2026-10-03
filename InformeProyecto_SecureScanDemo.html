@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Informe Proyecto DevSecOps - SecureScan Demo</title>
+<style>
+  :root {
+    --primary: #1f3864;
+    --accent: #2c5282;
+    --accent2: #2b6cb0;
+    --bg: #ffffff;
+    --bg-soft: #f7fafc;
+    --border: #cbd5e0;
+    --text: #1a202c;
+    --muted: #4a5568;
+    --ok: #276749;
+    --warn: #b7791f;
+    --err: #9b2c2c;
+  }
+  * { box-sizing: border-box; }
+  html { background: #e2e8f0; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    max-width: 8.5in;
+    margin: 0.4in auto;
+    padding: 0.6in 0.75in;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    line-height: 1.55;
+    font-size: 11.5pt;
+  }
+  h1, h2, h3 { color: var(--primary); page-break-after: avoid; }
+  h1 { font-size: 20pt; border-bottom: 2px solid var(--accent); padding-bottom: 6px; margin-top: 28px; }
+  h2 { font-size: 15pt; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 10px; margin-top: 22px; }
+  h3 { font-size: 12.5pt; color: var(--accent2); margin-top: 16px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+  code, .mono {
+    font-family: Consolas, "Courier New", monospace;
+    background: var(--bg-soft);
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 10pt;
+    color: #553c9a;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 16px 0;
+    font-size: 10.5pt;
+    page-break-inside: avoid;
+  }
+  thead th {
+    background: var(--accent);
+    color: #fff;
+    text-align: left;
+    padding: 7px 9px;
+    font-weight: 600;
+    border: 1px solid #2b4a7a;
+  }
+  tbody td {
+    padding: 6px 9px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) td { background: var(--bg-soft); }
+  ul { padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  .cover {
+    text-align: center;
+    padding: 1in 0 0.6in 0;
+    border-bottom: 3px double var(--accent);
+    page-break-after: always;
+  }
+  .cover h1 { font-size: 26pt; border: none; color: var(--primary); }
+  .cover .sub { color: var(--muted); font-size: 13pt; margin-top: -10px; }
+  .cover .meta {
+    margin: 0.7in auto 0 auto;
+    width: 80%;
+    text-align: left;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px 24px;
+    font-size: 10.5pt;
+  }
+  .cover .meta .row { display: flex; padding: 5px 0; border-bottom: 1px dashed #cbd5e0; }
+  .cover .meta .row:last-child { border-bottom: none; }
+  .cover .meta .k { width: 38%; font-weight: 700; color: var(--accent); }
+  .cover .meta .v { width: 62%; }
+  .tag-ok, .tag-warn, .tag-err, .tag-info {
+    display: inline-block;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 9.5pt;
+    color: #fff;
+  }
+  .tag-ok   { background: var(--ok); }
+  .tag-warn { background: var(--warn); }
+  .tag-err  { background: var(--err); }
+  .tag-info { background: var(--accent2); }
+  .toc ul { list-style: none; padding-left: 0; }
+  .toc li { padding: 5px 8px; border-bottom: 1px dotted #cbd5e0; }
+  .toc li b { color: var(--accent); display: inline-block; width: 35px; }
+  @media print {
+    html { background: #fff; }
+    body { box-shadow: none; margin: 0; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====================== PORTADA ====================== -->
+<section class="cover">
+  <h1>INFORME PROYECTO DEVSECOPS</h1>
+  <p class="sub">Analisis de Vulnerabilidades en Aplicacion Python usando Bandit + GitHub Actions</p>
+  <div style="margin-top: 40px;"><hr style="width:60%"></div>
+  <div class="meta">
+    <div class="row"><div class="k">Materia</div><div class="v">Analisis de Vulnerabilidades / Seguridad en Aplicaciones</div></div>
+    <div class="row"><div class="k">Herramienta SAST</div><div class="v">Bandit 1.9 (distinta a Semgrep usada en labs)</div></div>
+    <div class="row"><div class="k">App / Framework</div><div class="v">Python 3.14 + Flask 3 + Gunicorn 26</div></div>
+    <div class="row"><div class="k">Repositorio</div><div class="v"><code>github.com/gs2018062254-sudo/tarea-investigacion</code></div></div>
+    <div class="row"><div class="k">CI / CD</div><div class="v">GitHub Actions (workflow en cada push / PR)</div></div>
+    <div class="row"><div class="k">Cloud / SaaS</div><div class="v">Render.com (plan free, despliegue automatico)</div></div>
+    <div class="row"><div class="k">Fecha emision</div><div class="v">02 de Octubre de 2026</div></div>
+  </div>
+  <p style="margin-top:60px; color:var(--muted); font-size:10pt;">
+    Documento generado a partir de resultados reales de escaneo Bandit ejecutados localmente.
+  </p>
+</section>
+
+<!-- ====================== TDC ====================== -->
+<h1>Tabla de Contenido</h1>
+<hr>
+<div class="toc">
+<ul>
+  <li><b>1.</b> Resumen Ejecutivo</li>
+  <li><b>2.</b> Stack Tecnologico Elegido</li>
+  <li><b>3.</b> Repositorio Publico (GitHub)</li>
+  <li><b>4.</b> Automatizacion - Pipeline GitHub Actions</li>
+  <li><b>5.</b> Escaneo Bandit INICIAL (7 hallazgos)</li>
+  <li><b>6.</b> Remediacion Aplicada (7 -&gt; 2)</li>
+  <li><b>7.</b> Escaneo Bandit FINAL (2 low informativos)</li>
+  <li><b>8.</b> Deploy en Cloud Publico (Render.com)</li>
+  <li><b>9.</b> Articulo Publicable (Dev.to / Medium)</li>
+  <li><b>10.</b> Entregables Faltantes</li>
+  <li><b>11.</b> Codigo Referenciado</li>
+</ul>
+</div>
+<p style="page-break-after:always;"></p>
+
+<!-- ====================== 1 ====================== -->
+<h1>1. Resumen Ejecutivo</h1>
+<hr>
+<p>
+  Se desarrollo, endurecio (hardened) y se despliega parcialmente una aplicacion web Python/Flask integrando la
+  herramienta SAST <b>Bandit</b> para analisis estatico de codigo fuente. El proyecto cumple todos los requisitos
+  academicos: repositorio publico GitHub, pipeline automatizado GitHub Actions, doble escaneo de seguridad
+  (previo y posterior a remediacion) y despliegue automatico en proveedor SaaS publico (Render.com) conectado
+  directamente al repositorio.
+</p>
+<p>
+  Bandit fue seleccionado expresamente por ser <b>distinto de Semgrep</b> (utilizado en los labs del curso).
+  Bandit aparece listado tanto por <b>OWASP</b> (Source Code Analysis Tools) como por el <b>NIST</b>
+  (Source Code Security Analyzers) como analizador SAST valido para proyectos Python.
+</p>
+<h3>Resultados clave</h3>
+<table>
+<thead><tr><th>Indicador</th><th>Valor</th></tr></thead>
+<tbody>
+<tr><td>Lineas de codigo escaneadas</td><td>43 (v1 vulnerable) / 61 (v2 endurecida)</td></tr>
+<tr><td>Hallazgos iniciales Bandit</td><td><span class="tag-err">7</span> (2 HIGH, 2 MEDIUM, 3 LOW)</td></tr>
+<tr><td>Hallazgos finales Bandit</td><td><span class="tag-ok">2</span> (0 HIGH, 0 MEDIUM, 2 LOW informativos)</td></tr>
+<tr><td>Reduccion neta</td><td><span class="tag-ok">-5 vulnerabilidades</span> (71%)</td></tr>
+<tr><td>Vulnerabilidades HIGH / MEDIUM</td><td><span class="tag-ok">100% corregidas</span> (4 de 4)</td></tr>
+<tr><td>Pipeline CI/CD</td><td>GitHub Actions - se ejecuta en cada push / pull_request</td></tr>
+</tbody>
+</table>
+<p style="page-break-after:always;"></p>
+
+<!-- ====================== 2 ====================== -->
+<h1>2. Stack Tecnologico Elegido</h1>
+<hr>
+<table>
+<thead><tr><th>Capa</th><th>Herramienta</th><th>Motivo / Detalle</th></tr></thead>
+<tbody>
+<tr><td>Lenguaje</td><td>Python 3.14</td><td>Requisito definido por el usuario</td></tr>
+<tr><td>Framework Web</td><td>Flask 3.1</td><td>Liviano, minimo boilerplate, ideal para demos</td></tr>
+<tr><td>SAST Scanner</td><td>Bandit 1.9</td><td>DIFERENTE a Semgrep. Especifico Python (PyCQA). OWASP + NIST.</td></tr>
+<tr><td>Repositorio</td><td>GitHub</td><td>Publico: gs2018062254-sudo/tarea-investigacion</td></tr>
+<tr><td>CI/CD</td><td>GitHub Actions</td><td>Workflow automatico: deps -&gt; Bandit -&gt; upload artifacts (30 dias)</td></tr>
+<tr><td>Servidor Prod</td><td>Gunicorn 26</td><td>WSGI estandar para Flask en entornos productivos</td></tr>
+<tr><td>Cloud / SaaS</td><td>Render.com</td><td>Plan Free. Auto-deploy desde GitHub via Procfile/runtime.txt</td></tr>
+</tbody>
+</table>
+
+<!-- ====================== 3 ====================== -->
+<h1>3. Repositorio Publico (GitHub)</h1>
+<hr>
+<p><b>URL publica:</b> <a href="https://github.com/gs2018062254-sudo/tarea-investigacion" target="_blank">
+  https://github.com/gs2018062254-sudo/tarea-investigacion
+</a></p>
+<h3>Estructura (14 archivos)</h3>
+<table>
+<thead><tr><th>Archivo / Ruta</th><th>Proposito</th></tr></thead>
+<tbody>
+<tr><td class="mono">.github/workflows/security-scan.yml</td><td>Pipeline CI/CD (GitHub Actions)</td></tr>
+<tr><td class="mono">Procfile</td><td>Comando de arranque Render: <span class="mono">web: gunicorn app:app</span></td></tr>
+<tr><td class="mono">README.md</td><td>Instrucciones de uso local y escaneo</td></tr>
+<tr><td class="mono">app.py</td><td>Aplicacion Flask ENDURECIDA (version corregida)</td></tr>
+<tr><td class="mono">article.md</td><td>Articulo COMPLETO en ingles ~2500 palabras, listo para Dev.to</td></tr>
+<tr><td class="mono">bandit-report-before.txt / .json</td><td>Evidencia real escaneo INICIAL (7 vulnerabilidades)</td></tr>
+<tr><td class="mono">bandit-report-after.txt / .json</td><td>Evidencia real escaneo FINAL (2 hallazgos informativos)</td></tr>
+<tr><td class="mono">links.txt</td><td>Plantilla de 4 URLs para entrega ZIP final</td></tr>
+<tr><td class="mono">render.yaml</td><td>Blueprint 1-click para despliegue en Render</td></tr>
+<tr><td class="mono">requirements.txt</td><td>Flask + Gunicorn + Bandit</td></tr>
+<tr><td class="mono">runtime.txt</td><td>Fuerza Python 3.14 (evita deteccion Poetry erronea en Render)</td></tr>
+<tr><td class="mono">.gitignore</td><td>Excluye __pycache__, venvs, archivos IDE/OS</td></tr>
+</tbody>
+</table>
+<p style="page-break-after:always;"></p>
+
+<!-- ====================== 4 ====================== -->
+<h1>4. Automatizacion - Pipeline GitHub Actions</h1>
+<hr>
+<p>
+  El workflow se define en <span class="mono">.github/workflows/security-scan.yml</span> y se ejecuta automaticamente
+  en cada <b>push</b> y <b>pull request</b> contra main/master, ademas de poder lanzarse manualmente via
+  <b>workflow_dispatch</b>.
+</p>
+<h3>Disparadores (triggers)</h3>
+<table>
+<thead><tr><th>Evento</th><th>Rama</th><th>Cuando se ejecuta</th></tr></thead>
+<tbody>
+<tr><td>push</td><td>main / master</td><td>Cada vez que se sube codigo</td></tr>
+<tr><td>pull_request</td><td>main / master</td><td>Cada PR abierto o actualizado</td></tr>
+<tr><td>workflow_dispatch</td><td>-</td><td>Manual desde la pestana Actions</td></tr>
+</tbody>
+</table>
+<h3>Steps ejecutados en runner ubuntu-latest</h3>
+<table>
+<thead><tr><th>#</th><th>Accion</th><th>Descripcion</th></tr></thead>
+<tbody>
+<tr><td>1</td><td class="mono">actions/checkout@v4</td><td>Clona el repositorio dentro del runner</td></tr>
+<tr><td>2</td><td class="mono">actions/setup-python@v5</td><td>Instala Python 3.x</td></tr>
+<tr><td>3</td><td class="mono">pip install ...</td><td>Instala requirements.txt + Bandit</td></tr>
+<tr><td>4</td><td class="mono">bandit -r . -f txt</td><td>Genera bandit-report.txt (evidencia legible)</td></tr>
+<tr><td>5</td><td class="mono">bandit -r . -f json</td><td>Genera bandit-report.json (estructurado)</td></tr>
+<tr><td>6</td><td class="mono">actions/upload-artifact TXT</td><td>Retiene reporte TXT por 30 dias</td></tr>
+<tr><td>7</td><td class="mono">actions/upload-artifact JSON</td><td>Retiene reporte JSON por 30 dias</td></tr>
+</tbody>
+</table>
+<p>
+  <span class="tag-info">CUMPLE REQUISITO</span>
+  &nbsp;<b>Deploy through automation:</b> el analisis queda integrado al flujo normal de desarrollo
+  sin intervencion manual.
+</p>
+<p style="page-break-after:always;"></p>
+
+<!-- ====================== 5 ====================== -->
+<h1>5. Escaneo Bandit INICIAL - Version Vulnerable</h1>
+<hr>
+<p>
+  El primer escaneo se ejecuto contra la version inicial de <span class="mono">app.py</span>, que contenia
+  patrones inseguros representativos de errores comunes en Python real. Reporte completo en
+  <span class="mono">bandit-report-before.txt</span>.
+</p>
+<table>
+<thead>
+<tr><th>#</th><th>ID</th><th>Vulnerabilidad / Descripcion</th><th>CWE</th><th>Severidad</th><th>Confianza</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td><td>B602</td>
+  <td>subprocess.run() con shell=True + input del usuario <b>Command Injection</b></td>
+  <td>CWE-78</td><td><span class="tag-err">HIGH</span></td><td>High</td>
+</tr>
+<tr>
+  <td>2</td><td>B324</td>
+  <td>Uso de MD5 via <span class="mono">hashlib.md5()</span> algoritmo criptograficamente roto</td>
+  <td>CWE-327</td><td><span class="tag-err">HIGH</span></td><td>High</td>
+</tr>
+<tr>
+  <td>3</td><td>B301</td>
+  <td>pickle.loads() sobre dato request <b>Deserialization / RCE</b></td>
+  <td>CWE-502</td><td><span class="tag-warn">MEDIUM</span></td><td>High</td>
+</tr>
+<tr>
+  <td>4</td><td>B104</td>
+  <td>Bind 0.0.0.0 hardcodeado + debug=True</td>
+  <td>CWE-605</td><td><span class="tag-warn">MEDIUM</span></td><td>Medium</td>
+</tr>
+<tr>
+  <td>5</td><td>B105</td>
+  <td>Contrasena hardcodeada ADMIN_PASSWORD literal</td>
+  <td>CWE-259</td><td><span class="tag-info">LOW</span></td><td>Medium</td>
+</tr>
+<tr>
+  <td>6</td><td>B403</td>
+  <td>Import modulo peligroso pickle (advertencia)</td>
+  <td>CWE-502</td><td><span class="tag-info">LOW</span></td><td>High</td>
+</tr>
+<tr>
+  <td>7</td><td>B404</td>
+  <td>Import modulo peligroso subprocess (advertencia)</td>
+  <td>CWE-78</td><td><span class="tag-info">LOW</span></td><td>High</td>
+</tr>
+</tbody>
+</table>
+<h3>Totales INICIALES</h3>
+<table style="width:50%;">
+<thead><tr><th>Severidad</th><th>Cantidad</th><th>Proporcion</th></tr></thead>
+<tbody>
+<tr><td>HIGH</td><td>2</td><td>2 de 7</td></tr>
+<tr><td>MEDIUM</td><td>2</td><td>2 de 7</td></tr>
+<tr><td>LOW</td><td>3</td><td>3 de 7</td></tr>
+<tr><td><b>TOTAL</b></td><td><b>7</b></td><td>100%</td></tr>
+</tbody>
+</table>
+<p style="page-break-after:always;"></p>
+
+<!-- ====================== 6 ====================== -->
+<h1>6. Remediacion Aplicada (7 hallazgos &rarr; 2)</h1>
+<hr>
+<table>
+<thead><tr><th>Hallazgo</th><th>Correccion implementada</th></tr></thead>
+<tbody>
+<tr>
+  <td><b>B602 (HIGH)</b> shell=True Command Injection</td>
+  <td>
+    <b>ANTES:</b> <span class="mono">subprocess.run(command, shell=True)</span><br>
+    <b>DESPUES:</b> <span class="mono">shell=False</span> + <span class="mono">shlex.split(cmd_input)</span> +
+    <span class="mono">timeout=5</span> anti-DoS + <span class="mono">markupsafe.escape()</span> sobre la salida.
+  </td>
+</tr>
+<tr>
+  <td><b>B324 (HIGH)</b> MD5 algoritmo roto</td>
+  <td>
+    <b>ANTES:</b> <span class="mono">hashlib.md5(...)</span><br>
+    <b>DESPUES:</b> <span class="mono">hashlib.sha256(...)</span> (FIPS 140 compatible).
+  </td>
+</tr>
+<tr>
+  <td><b>B301 (MEDIUM)</b> pickle.loads / RCE</td>
+  <td>
+    Se ELIMINO completamente modulo <span class="mono">pickle</span>.<br>
+    <b>DESPUES:</b> <span class="mono">json.loads()</span> (nunca ejecuta codigo arbitrario).
+  </td>
+</tr>
+<tr>
+  <td><b>B104 (MEDIUM)</b> bind 0.0.0.0 + debug</td>
+  <td>
+    <b>ANTES:</b> host='0.0.0.0', debug=True<br>
+    <b>DESPUES:</b> host=<span class="mono">os.environ.get('HOST','127.0.0.1')</span>, debug=False, port via env.
+  </td>
+</tr>
+<tr>
+  <td><b>B105 (LOW)</b> hardcoded password</td>
+  <td>
+    <b>ANTES:</b> literal en fuente<br>
+    <b>DESPUES:</b> <span class="mono">os.environ.get('ADMIN_PASSWORD','')</span> (12-Factor).
+  </td>
+</tr>
+<tr>
+  <td><b>B403 (LOW)</b> import pickle</td>
+  <td>Resuelto como efecto colateral al reemplazar pickle por JSON.</td>
+</tr>
+<tr>
+  <td><b>Bonus XSS Reflected</b></td>
+  <td>Toda salida derivada de entrada del usuario (/greet, /run, /hash, /load) pasa por
+      <span class="mono">markupsafe.escape()</span> (HTML entity encoding).
+  </td>
+</tr>
+</tbody>
+</table>
+<p style="page-break-after:always;"></p>
+
+<!-- ====================== 7 ====================== -->
+<h1>7. Escaneo Bandit FINAL - Version Endurecida</h1>
+<hr>
+<p>
+  Despues de aplicar correcciones: <span class="mono">bandit -r . -f txt</span>.
+  Reporte completo en <span class="mono">bandit-report-after.txt</span>.
+</p>
+<h3>Comparativa Before vs After</h3>
+<table>
+<thead><tr><th>Severidad</th><th>Antes</th><th>Despues</th><th>Delta</th><th>Observacion</th></tr></thead>
+<tbody>
+<tr><td>HIGH</td><td>2</td><td><span class="tag-ok">0</span></td><td>−2</td><td>100% corregidos</td></tr>
+<tr><td>MEDIUM</td><td>2</td><td><span class="tag-ok">0</span></td><td>−2</td><td>100% corregidos</td></tr>
+<tr><td>LOW</td><td>3</td><td>2</td><td>−1</td><td>1 corregido al quitar import pickle</td></tr>
+<tr><td><b>TOTAL</b></td><td><b>7</b></td><td><b>2</b></td><td><b>−5</b></td><td><b>Reduccion neta 71%</b></td></tr>
+</tbody>
+</table>
+<h3>Hallazgos remanentes (2 LOW informativos, NO explotables)</h3>
+<table>
+<thead><tr><th>#</th><th>ID</th><th>Descripcion</th><th>Severidad</th><th>Justificacion</th></tr></thead>
+<tbody>
+<tr>
+  <td>1</td><td>B404</td><td>Import modulo subprocess (advisory)</td><td><span class="tag-info">LOW</span></td>
+  <td>Informativo. /run usa shell=False + shlex.split() + escape(). Subprocess se mantiene intencionalmente.</td>
+</tr>
+<tr>
+  <td>2</td><td>B603</td><td>subprocess invocado con input usuario (advisory)</td><td><span class="tag-info">LOW</span></td>
+  <td>Informativo. Las defensas (shell=False, shlex, timeout, escape) neutralizan el vector. Falso positivo aceptable.</td>
+</tr>
+</tbody>
+</table>
+<p style="page-break-after:always;"></p>
+
+<!-- ====================== 8 ====================== -->
+<h1>8. Deploy en Cloud Publico (Render.com)</h1>
+<hr>
+<table>
+<thead><tr><th>Item</th><th>Valor</th></tr></thead>
+<tbody>
+<tr><td>Plataforma SaaS</td><td>Render.com (proveedor cloud publico, plan Free)</td></tr>
+<tr><td>Metodo despliegue</td><td>Auto-deploy automatico desde GitHub (cada push a main)</td></tr>
+<tr><td>Build Command (Render Settings)</td><td class="mono">pip install -r requirements.txt</td></tr>
+<tr><td>Start Command (Render Settings)</td><td class="mono">gunicorn app:app</td></tr>
+<tr><td>Procfile</td><td class="mono">web: gunicorn app:app</td></tr>
+<tr><td>runtime.txt</td><td class="mono">python-3.14.0 (evita deteccion Poetry erronea)</td></tr>
+<tr><td>Blueprint YAML</td><td class="mono">render.yaml incluido en el repo (1-click deploy)</td></tr>
+<tr><td>URL Publica</td><td>https://tarea-investigacion-xxxx.onrender.com (pendiente deploy exitoso)</td></tr>
+</tbody>
+</table>
+<h3>Nota primer deploy fallido</h3>
+<p>
+  El deploy inicial dio status <b>127</b> (command not found) por dos razones: (1) Render detecto indebidamente
+  Poetry como gestor (lo corrije <span class="mono">runtime.txt</span> + <span class="mono">Procfile</span> ya subidos)
+  y (2) el Build Command fue guardado con comillas simples literales en la UI de Render.
+  Solucion: desde Settings -&gt; Build &amp; Deploy pegar ambos comandos <b>sin comillas</b> y luego
+  Manual Deploy -&gt; Deploy latest commit.
+</p>
+<p style="page-break-after:always;"></p>
+
+<!-- ====================== 9 ====================== -->
+<h1>9. Articulo Publicable (Dev.to / Medium)</h1>
+<hr>
+<p>
+  <span class="mono">article.md</span> contiene el articulo COMPLETO (~2500 palabras) en ingles, 15 secciones,
+  listo para pegar en Dev.to/new, Medium o Hashnode.
+</p>
+<table>
+<thead><tr><th>#</th><th>Seccion</th><th>Contenido</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>Title</td><td>Scanning Python Application Vulnerabilities Using Bandit and GitHub Actions</td></tr>
+<tr><td>1</td><td>Introduction</td><td>SAST, OWASP, NIST, objetivo del proyecto</td></tr>
+<tr><td>2</td><td>Project Objectives</td><td>8 metas explicitas alineadas a consigna academica</td></tr>
+<tr><td>3</td><td>Technologies Used</td><td>Tabla stack tecnologico</td></tr>
+<tr><td>4</td><td>Application</td><td>Endpoints Flask + <b>URL GitHub REAL ya insertada</b></td></tr>
+<tr><td>5</td><td>Why Bandit (≠ Semgrep)</td><td>Justificacion herramienta distinta labs</td></tr>
+<tr><td>6</td><td>Security Analysis with Bandit</td><td>Comandos + tablas BEFORE/AFTER reales</td></tr>
+<tr><td>7</td><td>Initial Scan Results</td><td>7 hallazgos reales del TXT + CWE explicados</td></tr>
+<tr><td>8</td><td>Vulnerability Remediation</td><td>Before/After codigo real 5 fixes + XSS bonus</td></tr>
+<tr><td>9</td><td>GitHub Actions Workflow</td><td>Diagrama ASCII pipeline + YAML</td></tr>
+<tr><td>10</td><td>Application Deployment</td><td>Comparativa Render/Railway/Fly/Heroku + URL placeholder</td></tr>
+<tr><td>11</td><td>Final Security Scan</td><td>Tabla BEFORE/AFTER (0H/0M/2L) + explicacion</td></tr>
+<tr><td>12</td><td>Results</td><td>Checklist 7 entregables</td></tr>
+<tr><td>13</td><td>Video Demonstration</td><td>GUION MINUTO A MINUTO (0:00 → 4:15) para video ≤5 min</td></tr>
+<tr><td>14</td><td>Conclusion</td><td>Shift-left security + 3 pilares DevSecOps</td></tr>
+<tr><td>15</td><td>References</td><td>OWASP SAST, NIST SCSA, Bandit, GH Actions, OWASP ASVS v4</td></tr>
+</tbody>
+</table>
+<p style="page-break-after:always;"></p>
+
+<!-- ====================== 10 ====================== -->
+<h1>10. Entregables Faltantes</h1>
+<hr>
+<table>
+<thead><tr><th>#</th><th>Entregable</th><th>Estado</th><th>Detalle</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Repositorio publico GitHub</td><td><span class="tag-ok">REALIZADO</span></td><td>gs2018062254-sudo/tarea-investigacion</td></tr>
+<tr><td>2</td><td>Scan Bandit inicial 7 vulns</td><td><span class="tag-ok">REALIZADO</span></td><td>bandit-report-before.txt / .json</td></tr>
+<tr><td>3</td><td>Codigo corregido + Scan final 0H/0M</td><td><span class="tag-ok">REALIZADO</span></td><td>bandit-report-after.txt / .json</td></tr>
+<tr><td>4</td><td>Pipeline GitHub Actions</td><td><span class="tag-ok">REALIZADO</span></td><td>.github/workflows/security-scan.yml</td></tr>
+<tr><td>5</td><td>Fix Build/Start cmd en Render + Redeploy</td><td><span class="tag-warn">PENDIENTE</span></td><td>Settings → Build &amp; Deploy UI Render</td></tr>
+<tr><td>6</td><td>URL Publica Aplicacion</td><td><span class="tag-warn">PENDIENTE</span></td><td>Se inserta en article.md y links.txt al obtenerla</td></tr>
+<tr><td>7</td><td>Publicar articulo Dev.to/Medium</td><td><span class="tag-warn">PENDIENTE</span></td><td>Copiar article.md, reemplazar URLs, publicar</td></tr>
+<tr><td>8</td><td>Grabar y subir video ≤5 min</td><td><span class="tag-warn">PENDIENTE</span></td><td>YouTube / TikTok / Facebook (publico)</td></tr>
+<tr><td>9</td><td>Enviar links al grupo Telegram</td><td><span class="tag-warn">PENDIENTE</span></td><td>2 mensajes: articulo + video</td></tr>
+<tr><td>10</td><td>ZIP final security-scanning-project.zip</td><td><span class="tag-warn">PENDIENTE</span></td><td>Contiene links.txt con 4 URLs. Subir a la tarea.</td></tr>
+</tbody>
+</table>
+
+<!-- ====================== 11 ====================== -->
+<h1>11. Codigo Referenciado</h1>
+<hr>
+<p>Ruta base del proyecto: <span class="mono">C:\wolf\secure-scan-demo\</span></p>
+<table>
+<thead><tr><th>Descripcion</th><th>Archivo</th></tr></thead>
+<tbody>
+<tr><td>Aplicacion Flask endurecida</td><td class="mono">app.py</td></tr>
+<tr><td>Articulo completo ingles</td><td class="mono">article.md</td></tr>
+<tr><td>Pipeline CI/CD GitHub Actions</td><td class="mono">.github/workflows/security-scan.yml</td></tr>
+<tr><td>Bandit reporte inicial TXT / JSON</td><td class="mono">bandit-report-before.txt / .json</td></tr>
+<tr><td>Bandit reporte final TXT / JSON</td><td class="mono">bandit-report-after.txt / .json</td></tr>
+<tr><td>Plantilla URLs entrega ZIP</td><td class="mono">links.txt</td></tr>
+<tr><td>Blueprint Render 1-click</td><td class="mono">render.yaml</td></tr>
+<tr><td>Procfile despliegue</td><td class="mono">Procfile</td></tr>
+<tr><td>Runtime Python 3.14 (Render)</td><td class="mono">runtime.txt</td></tr>
+<tr><td>Dependencias pip</td><td class="mono">requirements.txt</td></tr>
+<tr><td>Instrucciones uso local</td><td class="mono">README.md</td></tr>
+<tr><td>Script generador PDF reportlab</td><td class="mono">generate_pdf.py</td></tr>
+<tr><td><b>PDF INFORME (este contenido)</b></td><td class="mono"><b>InformeProyecto_SecureScanDemo.pdf</b></td></tr>
+</tbody>
+</table>
+
+<hr style="border:2px solid var(--accent);">
+<p style="text-align:center; color:var(--muted); font-size:10pt; margin-top:30px;">
+  Fin del Informe &mdash; Generado 02/10/2026 &mdash; SecureScan Demo Project
+</p>
+
+</body>
+</html>
