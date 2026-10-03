@@ -1,0 +1,87 @@
+======================================================
+  SECURESCAN DEMO — DELIVERY LINKS (replace with yours)
+======================================================
+
+1. PUBLIC REPOSITORY (GitHub)
+   URL: https://github.com/YOUR_USERNAME/secure-scan-demo
+   ---
+   Instructions:
+   - Create a new PUBLIC repo on GitHub.
+   - Push the entire "secure-scan-demo" folder to it.
+   - Paste the repo URL above.
+
+2. DEPLOYED APPLICATION (Public Cloud / SaaS)
+   URL: https://secure-scan-demo.onrender.com
+        OR
+        https://secure-scan-demo.up.railway.app
+        OR
+        https://secure-scan-demo.fly.dev
+        OR
+        https://secure-scan-demo.herokuapp.com
+   ---
+   Instructions:
+   - Go to https://render.com (or Railway, Fly.io, Heroku).
+   - Sign up / log in.
+   - Click "New + Web Service".
+   - Connect your GitHub repo "secure-scan-demo".
+   - Build Command:  pip install -r requirements.txt
+   - Start Command:  gunicorn app:app
+   - Wait for the deploy to finish.
+   - Paste the live public URL above.
+
+3. ARTICLE (Dev.to / Medium / Hashnode)
+   URL: https://dev.to/YOUR_USERNAME/scanning-python-application-vulnerabilities-using-bandit-and-github-actions-XXXX
+   ---
+   Instructions:
+   - Go to https://dev.to/new
+   - Copy-paste the full contents of article.md into the editor.
+   - Replace every [ADD ... LINK HERE] placeholder with your real URLs.
+   - Publish the article (Public visibility).
+   - Paste the article URL above.
+
+4. VIDEO (YouTube / TikTok / Facebook — max 5 minutes)
+   URL: https://www.youtube.com/watch?v=XXXXXXXXXXX
+        OR
+        https://www.tiktok.com/@YOUR_USERNAME/video/XXXXXXXXXX
+        OR
+        https://www.facebook.com/yourname/videos/XXXXXXXXXX
+   ---
+   Instructions (follow the script inside article.md, section "Video Demonstration"):
+   - 0:00-0:30  Intro — what the project is about.
+   - 0:30-1:00  Show the public GitHub repo (point #1 above).
+   - 1:00-1:40  Show the app code and the vulnerable patterns.
+   - 1:40-2:20  Run `bandit -r .` and show the initial 7 findings.
+   - 2:20-2:50  Show the GitHub Actions workflow + 1 successful Actions run.
+   - 2:50-3:30  Show the remediation + run `bandit -r .` again (0 HIGH / 0 MEDIUM).
+   - 3:30-3:55 Open the deployed app URL (point #2), click /ping, /greet.
+   - 3:55-4:15 End screen with all 4 URLs.
+   - Upload the video as PUBLIC.
+   - Paste the video URL above.
+
+======================================================
+  TELEGRAM STEP (after you have the 4 links above)
+======================================================
+
+Send these TWO messages to the course Telegram group:
+
+  Message 1:
+  📝 ARTÍCULO / ARTICLE:
+  <PASTE HERE YOUR ARTICLE URL (point #3)>
+
+  Message 2:
+  🎥 VIDEO:
+  <PASTE HERE YOUR VIDEO URL (point #4)>
+
+======================================================
+  FINAL ZIP FOR THE TASK
+======================================================
+
+After filling this file, create a ZIP file called:
+
+    security-scanning-project.zip
+
+Containing ONLY this file:
+
+    links.txt    (this file, with ALL 4 URLs filled in)
+
+Then upload security-scanning-project.zip to the assignment.

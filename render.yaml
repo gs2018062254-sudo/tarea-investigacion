@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: secure-scan-demo
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PORT
+        sync: false
+      - key: HOST
+        value: "0.0.0.0"
+      - key: ADMIN_PASSWORD
+        generateValue: true
+    autoDeploy: yes
+    branch: main
