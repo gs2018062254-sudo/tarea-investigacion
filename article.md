@@ -39,8 +39,7 @@ The application is a simple web service developed with Python and Flask. It expo
 
 The source code is publicly available in the following repository:
 
-> **GitHub Repository:** `[ADD YOUR GITHUB REPOSITORY LINK HERE]`
-> Example: `https://github.com/yourusername/secure-scan-demo`
+> **GitHub Repository:** https://github.com/gs2018062254-sudo/tarea-investigacion
 
 ## Why Bandit (and not Semgrep)?
 

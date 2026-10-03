@@ -3,12 +3,9 @@
 ======================================================
 
 1. PUBLIC REPOSITORY (GitHub)
-   URL: https://github.com/YOUR_USERNAME/secure-scan-demo
+   URL: https://github.com/gs2018062254-sudo/tarea-investigacion
    ---
-   Instructions:
-   - Create a new PUBLIC repo on GitHub.
-   - Push the entire "secure-scan-demo" folder to it.
-   - Paste the repo URL above.
+   ✅ DONE — already pushed to GitHub.
 
 2. DEPLOYED APPLICATION (Public Cloud / SaaS)
    URL: https://secure-scan-demo.onrender.com
